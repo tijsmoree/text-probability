@@ -1,19 +1,19 @@
 import fs from 'fs';
 
-if (process.argv.length < 3) {
-  console.log('You have to provide a file name!');
+if (process.argv.length < 4) {
+  console.log('You have to provide an amount of characters and a file name!');
   process.exit(1);
 }
 
 const text = fs
-  .readFileSync(process.argv[2], 'utf8')
+  .readFileSync(process.argv[3], 'utf8')
   .toLocaleLowerCase()
   .normalize('NFD')
   .replace(/[\u0300-\u036f]/g, '');
 
 const stats = {};
 
-const n = 5;
+const n = parseInt(process.argv[2]);
 
 for (let i = n; i < text.length; i++) {
   let stat = stats;

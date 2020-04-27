@@ -1,8 +1,13 @@
 import fs from 'fs';
 
+if (process.argv.length < 4) {
+  console.log('You have to provide an amount of words and a file name!');
+  process.exit(1);
+}
+
 const { n, stats } = JSON.parse(
   fs
-    .readFileSync('./out/probs.json', 'utf8')
+    .readFileSync(process.argv[3], 'utf8')
     .toLocaleLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, ''),
@@ -28,7 +33,7 @@ function pick(text: string) {
   }
 }
 
-for (let i = 1; i < 1000; i++) {
+for (let i = 1; i < parseInt(process.argv[2]); i++) {
   try {
     text += pick(text);
   } catch (e) {
