@@ -1,4 +1,4 @@
-import fs, { exists } from 'fs';
+import fs from 'fs';
 
 if (process.argv.length < 3) {
   console.log('You have to provide a file name!');
