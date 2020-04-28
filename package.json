@@ -4,7 +4,7 @@
   "description": "Text Probability",
   "main": "src/read.ts",
   "scripts": {
-    "read": "ts-node src/read.ts 5 test.txt",
+    "read": "ts-node src/read.ts 4 in/bijbel.txt",
     "write": "ts-node src/write.ts 1000 out/probs.json",
     "tsc": "./node_modules/.bin/tsc"
   },

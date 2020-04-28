@@ -11,50 +11,38 @@ const text = fs
   .normalize('NFD')
   .replace(/[\u0300-\u036f]/g, '');
 
-const stats = {};
+const probs: { [prev: string]: { [cur: string]: number } } = {};
 
 const n = parseInt(process.argv[2]);
 
-for (let i = n; i < text.length; i++) {
-  let stat = stats;
-  for (let j = 0; j < n + 1; j++) {
-    const char = text.charAt(i - n + j + 1);
+for (let i = 0; i < text.length - n; i++) {
+  const prev = text.substring(i, i + n);
+  const cur = text.charAt(i + n);
 
-    if (j === n) {
-      if (!stat[char]) {
-        stat[char] = 1;
-      } else {
-        stat[char]++;
-      }
-    } else if (!stat[char]) {
-      stat[char] = {};
-    }
-
-    stat = stat[char];
+  if (!probs[prev]) {
+    probs[prev] = {};
   }
+
+  if (!probs[prev][cur]) {
+    probs[prev][cur] = 0;
+  }
+
+  probs[prev][cur]++;
 }
 
-function normalize(stats: any) {
-  if (typeof Object.values(stats)[0] === 'number') {
-    const sum = Object.values(stats).reduce<number>(
-      (a: number, c: number) => a + c,
-      0,
-    );
+for (const prob in probs) {
+  const sum = Object.values(probs[prob]).reduce<number>(
+    (a: number, c: number) => a + c,
+    0,
+  );
 
-    for (const stat in stats) {
-      stats[stat] /= sum;
-    }
-  } else {
-    for (const stat in stats) {
-      normalize(stats[stat]);
-    }
+  for (const p in probs[prob]) {
+    probs[prob][p] = Number((probs[prob][p] / sum).toFixed(4));
   }
 }
-
-normalize(stats);
 
 fs.writeFile(
   './out/probs.json',
-  JSON.stringify({ n, stats }),
+  JSON.stringify({ n, probs }),
   err => err && console.log(err),
 );
